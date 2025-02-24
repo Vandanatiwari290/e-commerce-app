@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Products</h2>
+<div class="row mt-4">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card {% if product.stock <= 0 %}text-muted opacity-75{% endif %}">
+            {% if product.image_path %}
+            <img src="{{ url_for('static', filename=product.image_path) }}" class="card-img-top" alt="{{ product.name }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description }}</p>
+                <p class="card-text"><strong>Price: ₹{{ "%.2f"|format(product.price) }}</strong></p>
+                {% if product.stock > 0 %}
+                    <p class="card-text">Stock: {{ product.stock }}</p>
+                    {% if current_user.is_authenticated and not current_user.is_admin %}
+                    <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}">
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                {% else %}
+                    <p class="card-text text-danger fw-bold">Out of Stock</p>
+                    <button class="btn btn-primary" disabled>Add to Cart</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

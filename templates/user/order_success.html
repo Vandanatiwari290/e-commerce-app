@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Order Placed Successfully!</h3>
+            </div>
+            <div class="card-body">
+                <h4>Order Details</h4>
+                <p>Order ID: #{{ order.id }}</p>
+                <p>Total Amount: ₹{{ "%.2f"|format(order.total_amount) }}</p>
+                <p>Status: {{ order.status }}</p>
+                <p>Payment Status: {{ order.payment_status }}</p>
+                <p>Payment ID: {{ order.payment_id }}</p>
+                
+                <h5 class="mt-4">Items Ordered</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>₹{{ "%.2f"|format(item.price) }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ "%.2f"|format(item.price * item.quantity) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('orders') }}" class="btn btn-primary">View All Orders</a>
+                    <a href="{{ url_for('products') }}" class="btn btn-secondary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
